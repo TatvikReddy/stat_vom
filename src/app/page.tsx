@@ -15,7 +15,7 @@ export default async function Home() {
         {/* Background Image */}
         <Image 
           src="/img1.jpg" 
-          alt="Mars Colony Background" 
+          alt="Vault on Mars" 
           fill 
           className="object-cover z-0 brightness-50"
           priority
@@ -24,14 +24,14 @@ export default async function Home() {
         {/* Site Logo/Title - No auth button here as it's in layout.tsx */}
         <div className="absolute top-0 w-full flex justify-start items-center p-4 z-10">
           <Link href="/" className="text-xl font-bold text-white">
-            MCS Analytics
+            VOM Analytics
           </Link>
         </div>
         
         {/* Main Content - Adjusted padding-top to account for header */}
         <div className="container relative z-10 flex flex-col items-center justify-center gap-12 px-4 py-24">
           <h1 className="text-5xl font-extrabold tracking-tight text-center text-white sm:text-[5rem]">
-            Mars <span className="text-[#ff9966]">Colony</span> Simulator
+            Vault <span className="text-[#ff9966]">On</span> Mars
           </h1>
           
           <p className="text-xl text-center max-w-3xl text-white">
