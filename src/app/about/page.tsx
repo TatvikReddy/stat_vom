@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export const runtime = 'edge';
-
 export default function AboutPage() {
   return (
     <main className="relative min-h-screen flex flex-col items-center">
