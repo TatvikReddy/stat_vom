@@ -1,13 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { LatestPost } from "~/app/_components/post";
-import { api, HydrateClient } from "~/trpc/server";
+import { HydrateClient } from "~/trpc/server";
 
 export default async function Home() {
-  const hello = await api.post.hello({ text: "Vault On Mars" });
-
-  void api.post.getLatest.prefetch();
 
   return (
     <HydrateClient>
@@ -79,11 +75,12 @@ export default async function Home() {
                 View rare accomplishments and special milestones reached by the community.
               </div>
             </Link>
+
           </div>
           
           <div className="flex flex-col items-center gap-2 text-white">
             <p className="text-2xl">
-              {hello ? "Welcome from the Team of Vault On Mars" : "Loading Colony Data..."}
+              Welcome from the Team of Vault On Mars
             </p>
           </div>
 
