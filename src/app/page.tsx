@@ -36,15 +36,6 @@ export default async function Home() {
           
           {/* Navigation Cards - 2x2 Grid */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 max-w-4xl w-full">
-            <Link
-              className="flex flex-col gap-3 rounded-xl bg-black/40 backdrop-blur-sm p-6 hover:bg-black/50 transition-all border border-white/10"
-              href="/leaderboards"
-            >
-              <h3 className="text-2xl font-bold text-white">Leaderboards →</h3>
-              <div className="text-lg text-white/80">
-                See the top colonists ranked by survival time, resource efficiency, and colony size.
-              </div>
-            </Link>
             
             <Link
               className="flex flex-col gap-3 rounded-xl bg-black/40 backdrop-blur-sm p-6 hover:bg-black/50 transition-all border border-white/10"
@@ -53,16 +44,6 @@ export default async function Home() {
               <h3 className="text-2xl font-bold text-white">Analytics →</h3>
               <div className="text-lg text-white/80">
                 Discover player strategies through comprehensive game data and colony performance metrics.
-              </div>
-            </Link>
-            
-            <Link
-              className="flex flex-col gap-3 rounded-xl bg-black/40 backdrop-blur-sm p-6 hover:bg-black/50 transition-all border border-white/10"
-              href="/tech-tree"
-            >
-              <h3 className="text-2xl font-bold text-white">Technology Tree →</h3>
-              <div className="text-lg text-white/80">
-                Explore the research pathways and technological advancements available in the game.
               </div>
             </Link>
             
