@@ -146,10 +146,6 @@ export default function AchievementsPage() {
         </div>
       </div>
       
-      {/* Footer */}
-      <div className="relative z-10 w-full py-4 mt-auto bg-black/60 text-center text-white/60 text-sm">
-        Vault On Mars Analytics Dashboard • © 2025
-      </div>
     </main>
   );
 }
