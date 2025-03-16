@@ -57,6 +57,7 @@ export default function AboutPage() {
                 <span className="text-3xl font-bold text-white">TRC</span>
               </div>
               <h3 className="text-xl font-bold text-white">Tatvik Reddy Chevuru</h3>
+              <p className="text-white/70">Dev-Ops</p>
             </div>
             
             <div className="text-center">
@@ -71,7 +72,7 @@ export default function AboutPage() {
                 <span className="text-3xl font-bold text-white">NR</span>
               </div>
               <h3 className="text-xl font-bold text-white">Nafiz Rahman</h3>
-              <p className="text-white/70">Note-Taker</p>
+              <p className="text-white/70">Project-Management</p>
             </div>
           </div>
         </div>
@@ -86,6 +87,7 @@ export default function AboutPage() {
                 <span className="text-3xl font-bold text-white">SG</span>
               </div>
               <h3 className="text-xl font-bold text-white">Satyam Garg</h3>
+              <p className="text-white/70">Database-Engineer</p>
             </div>
             
             <div className="text-center">
@@ -93,6 +95,7 @@ export default function AboutPage() {
                 <span className="text-3xl font-bold text-white">DB</span>
               </div>
               <h3 className="text-xl font-bold text-white">Danielle Bryan</h3>
+              <p className="text-white/70">Cyber-Security</p>
             </div>
             
             <div className="text-center">
@@ -100,7 +103,7 @@ export default function AboutPage() {
                 <span className="text-3xl font-bold text-white">DB</span>
               </div>
               <h3 className="text-xl font-bold text-white">Daniyal Baig</h3>
-              <p className="text-white/70">Point-Of-Contact</p>
+              <p className="text-white/70">Team-Lead</p>
             </div>
           </div>
         </div>
