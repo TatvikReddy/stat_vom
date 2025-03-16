@@ -24,7 +24,7 @@ export default async function Home() {
         {/* Site Logo/Title - No auth button here as it's in layout.tsx */}
         <div className="absolute top-0 w-full flex justify-start items-center p-4 z-10">
           <Link href="/" className="text-xl font-bold text-white">
-            VOM Analytics
+            V<span className="text-[#ff9966]">O</span>M Analytics
           </Link>
         </div>
         
@@ -83,22 +83,26 @@ export default async function Home() {
           
           <div className="flex flex-col items-center gap-2 text-white">
             <p className="text-2xl">
-              {hello ? hello.greeting : "Loading colony data..."}
+              {hello ? "Welcome from the Team of Vault On Mars" : "Loading Colony Data..."}
             </p>
           </div>
 
           {/* Latest Updates Section */}
           <div className="border-t border-white/20 pt-8 w-full max-w-4xl mt-6">
-            <h2 className="text-3xl font-bold text-center mb-6 text-white">Latest Colony Updates</h2>
-            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-              <LatestPost />
-            </div>
+            <h2 className="text-3xl font-bold text-center mb-6 text-white">
+              <Link href="/about" className="hover:text-[#ff9966] transition-colors">
+                About us <span className="ml-1">→</span>
+              </Link>
+            </h2>
+            <p className="text-center text-white/80 mb-4">
+              Learn more about our team, mission, and the story behind Vault On Mars.
+            </p>
           </div>
         </div>
         
         {/* Footer */}
         <div className="relative z-10 w-full py-4 mt-auto bg-black/60 text-center text-white/60 text-sm">
-          Mars Colony Simulator Analytics Dashboard • © 2025
+          Vault On Mars Analytics Dashboard • © 2025
         </div>
       </main>
     </HydrateClient>

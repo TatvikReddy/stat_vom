@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mars Colony Simulator Analytics",
+  title: "Vault On Mars Analytics",
   description: "View player achievements and colony statistics from the Mars Colony Simulator game",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
@@ -40,7 +40,7 @@ export default function RootLayout({
               <SignedOut>
                 <SignInButton>
                   <button className="rounded-lg bg-white/10 px-4 py-2 font-semibold text-white backdrop-blur-sm hover:bg-white/20 transition-all">
-                    Sign In
+                    Log In
                   </button>
                 </SignInButton>
                 <SignUpButton>
