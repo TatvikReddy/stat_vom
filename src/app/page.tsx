@@ -14,6 +14,7 @@ export default async function Home() {
           alt="Vault on Mars" 
           fill 
           className="object-cover z-0 brightness-50"
+          quality={100}
           priority
         />
         

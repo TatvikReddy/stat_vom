@@ -10,6 +10,7 @@ export default function AboutPage() {
         alt="About Vault On Mars" 
         fill 
         className="object-cover z-0 brightness-50" 
+        quality={100}
         priority
       />
       

@@ -10,7 +10,8 @@ export default function AchievementsPage() {
         src="/img1.jpg" 
         alt="Mars Colony Achievements" 
         fill 
-        className="object-cover z-0 brightness-50" 
+        className="object-cover z-0 brightness-50"
+        quality={100} 
         priority
       />
       
