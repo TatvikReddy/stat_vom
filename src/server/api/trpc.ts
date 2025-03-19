@@ -6,9 +6,10 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { auth } from "@clerk/nextjs/server";
 
 import { db } from "~/server/db";
 
@@ -27,7 +28,7 @@ import { db } from "~/server/db";
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
     db,
-    ...opts,
+    headers: opts.headers,
   };
 };
 
@@ -104,3 +105,62 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+/**
+ * Protected procedure for developers only
+ * 
+ * This procedure ensures that the user is authenticated and has the developer role.
+ * It will throw an error if the user is not authenticated or doesn't have the right role.
+ */
+export const devProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(async ({ ctx, next }) => {
+    try {
+      // Get auth data directly
+      const authData = await auth();
+      
+      // Check if user is authenticated
+      if (!authData.userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Not authenticated"
+        });
+      }
+      
+      // Store the user ID for later use
+      const userId = authData.userId;
+      
+      // Import dynamically to avoid circular dependency
+      const { isUserDeveloper } = await import("../../server/auth");
+      const isDeveloper = await isUserDeveloper();
+      
+      if (!isDeveloper) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Not authorized - Developer access only"
+        });
+      }
+      
+      // All checks passed, continue with the enhanced context
+      return next({
+        ctx: {
+          ...ctx,
+          userId,
+        },
+      });
+    } catch (error) {
+      // Handle known errors
+      if (error instanceof TRPCError) {
+        throw error;
+      }
+      
+      // Log and convert unknown errors
+      console.error("Error in dev procedure:", 
+        error instanceof Error ? error.message : "Unknown error");
+      
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Authentication error"
+      });
+    }
+  });
