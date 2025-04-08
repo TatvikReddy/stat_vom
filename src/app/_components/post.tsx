@@ -5,13 +5,15 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 
 export function LatestPost() {
-
   const utils = api.useUtils();
-  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  
   const createPost = api.post.create.useMutation({
     onSuccess: async () => {
       await utils.post.invalidate();
-      setName("");
+      setTitle("");
+      setContent("");
     },
   });
 
@@ -20,10 +22,28 @@ export function LatestPost() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createPost.mutate({ name });
+          createPost.mutate({ 
+            title, 
+            content 
+          });
         }}
         className="flex flex-col gap-2"
       >
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="rounded-md px-4 py-2 bg-white/10 text-white"
+        />
+        
+        <textarea
+          placeholder="Content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="rounded-md px-4 py-2 bg-white/10 text-white min-h-24"
+        />
+        
         <button
           type="submit"
           className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
