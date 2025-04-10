@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import Script from "next/script";
 
 import { HydrateClient } from "~/trpc/server";
 
@@ -25,6 +26,22 @@ export default async function Home() {
       title: "Research Breakthrough: High-Yield Crops",
       date: "March 5, 2025",
       excerpt: "New farming technology allows for 95% more efficient food production in your colony.",
+      link: "/news/research-breakthrough-crops"
+    },
+
+    {
+      id: 4,
+      title: "Viral Outbreak",
+      date: "April 10, 2025",
+      excerpt: "New outbourne virus is spreading rapidly.",
+      link: "/news/research-breakthrough-crops"
+    },
+
+    {
+      id: 5,
+      title: "New Species Discovered",
+      date: "April 10, 2025",
+      excerpt: "New species has been discovered similar to us.",
       link: "/news/research-breakthrough-crops"
     }
   ];
@@ -108,14 +125,18 @@ export default async function Home() {
               View All News →
             </Link>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div 
+            id="newsContainer"
+            className="flex gap-8 overflow-x-auto scroll-smooth py-4"
+          >
             {latestNews.map((item) => (
-              <Link key={item.id} href={item.link} className="group">
+              <Link key={item.id} href={item.link} className="group min-w-[475px]">
                 <div className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 h-full transition-all group-hover:border-[#ff9966]/50 group-hover:bg-white/10">
                   <div className="p-6">
                     <div className="text-[#ff9966] text-sm mb-2">{item.date}</div>
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#ff9966] transition-colors">{item.title}</h3>
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#ff9966] transition-colors">
+                      {item.title}
+                    </h3>
                     <p className="text-white/70 mb-4">{item.excerpt}</p>
                     <div className="text-[#ff9966] font-medium">Read More →</div>
                   </div>
@@ -215,6 +236,23 @@ export default async function Home() {
           </Link>
         </div>
       </section>
+      
+      {/* Client-side script to add onWheel functionality */}
+      <Script id="news-scroll" strategy="afterInteractive">
+        {`
+          (function() {
+            const container = document.getElementById('newsContainer');
+            if (container) {
+              container.addEventListener('wheel', function(e) {
+                if(e.deltaY !== 0) {
+                  this.scrollLeft += e.deltaY;
+                  e.preventDefault();
+                }
+              });
+            }
+          })();
+        `}
+      </Script>
     </HydrateClient>
   );
 }
