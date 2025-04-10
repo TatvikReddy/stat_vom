@@ -3,125 +3,98 @@
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { api } from "~/trpc/react";
+import type { TRPCClientErrorLike } from "@trpc/client";
+import type { AppRouter } from "~/server/api/root";
 
 export default function CreatePostForm() {
+  const { user, isSignedIn } = useUser();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  
-  // Get user from Clerk
-  const { user, isLoaded } = useUser();
-  
-  // Create post mutation
+  const [error, setError] = useState("");
+
+  // List of authorized developer IDs - add your Clerk user ID here
+  const authorizedDevIds = [
+    // Add your Clerk user ID here
+    "user_2NF8fKs92o9PLKlO", // Example ID - replace with your actual developer IDs
+  ];
+
+  const isDeveloper = isSignedIn && user && authorizedDevIds.includes(user.id);
+
+  const utils = api.useUtils();
   const createPost = api.post.create.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       setTitle("");
       setContent("");
-      setSuccess(true);
-      setError(null);
-      setIsSubmitting(false);
-      
-      // Reset success message after 3 seconds
-      setTimeout(() => {
-        setSuccess(false);
-      }, 3000);
+      setError("");
+      await utils.post.getAll.invalidate();
     },
-    onError: (err) => {
-      setError(err.message);
-      setIsSubmitting(false);
+    onError: (e: TRPCClientErrorLike<AppRouter>) => {
+      setError(e.message);
     }
   });
-  
-  // Check if the user is a developer
-  const isDeveloper = isLoaded && user?.publicMetadata?.typeUser === "Dev";
-  
-  const handleSubmit = async (e: React.FormEvent) => {
+
+  if (!isDeveloper) {
+    return null; // Don't render form for non-developers
+  }
+
+  // Added: handleSubmit with validation and confirmation.
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!title || !content) {
       setError("Title and content are required");
       return;
     }
-    
-    setIsSubmitting(true);
-    setError(null);
-    
-    try {
-      await createPost.mutateAsync({
-        title,
-        content
-      });
-    } catch {
-      // Error is handled in the onError callback
+    const nameToUse =
+      user?.fullName?.trim() ? user.fullName : "Developer";
+    if (
+      !confirm(
+        `Are you sure you want to post the update titled "${title}"?`
+      )
+    ) {
+      return;
     }
+    createPost.mutate({ title, content, name: nameToUse });
   };
-  
-  // Only render the form for developers
-  if (!isLoaded) {
-    return (
-      <div className="w-full max-w-4xl mx-auto my-8 p-6 bg-gray-800 rounded-lg">
-        <p className="text-gray-400">Checking user permissions...</p>
-      </div>
-    );
-  }
-  
-  if (!isDeveloper) {
-    return null;
-  }
-  
+
+  // Added: clear error on input change for improved UX.
+  const handleInputChange = () => {
+    if (error) setError("");
+  };
+
   return (
-    <div className="w-full max-w-4xl mx-auto my-8 p-6 bg-gray-800 rounded-lg border border-gray-700">
-      <h2 className="text-2xl font-bold text-white mb-6">Create Developer Update</h2>
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-1">
-            Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
-            disabled={isSubmitting}
-          />
-        </div>
-        
-        <div>
-          <label htmlFor="content" className="block text-sm font-medium text-gray-300 mb-1">
-            Content
-          </label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={6}
-            className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
-            disabled={isSubmitting}
-          />
-        </div>
-        
+    <div className="w-full max-w-2xl mx-auto mb-16 bg-black/40 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+      <h2 className="text-2xl font-bold text-[#ff9966] mb-6">
+        Create Developer Update
+      </h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <input
+          type="text"
+          placeholder="Update Title"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            handleInputChange();
+          }}
+          className="rounded-md px-4 py-2 bg-white/10 text-white border border-white/20 focus:border-[#ff9966] focus:outline-none"
+        />
+        <textarea
+          placeholder="Update Content"
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+            handleInputChange();
+          }}
+          className="rounded-md px-4 py-2 bg-white/10 text-white border border-white/20 focus:border-[#ff9966] focus:outline-none min-h-32"
+        />
         {error && (
-          <div className="p-2 bg-red-900 text-white rounded">
-            {error}
-          </div>
+          <p className="text-red-400 text-sm">{error}</p>
         )}
-        
-        {success && (
-          <div className="p-2 bg-green-800 text-white rounded">
-            Post created successfully!
-          </div>
-        )}
-        
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded disabled:opacity-50"
+          disabled={createPost.isPending}
+          className="px-4 py-2 bg-[#ff9966] text-black font-bold rounded-md hover:bg-[#ff8855] transition-colors disabled:opacity-50"
         >
-          {isSubmitting ? "Creating..." : "Create Post"}
+          {createPost.isPending ? "Posting..." : "Post Update"}
         </button>
       </form>
     </div>

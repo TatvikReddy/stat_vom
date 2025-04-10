@@ -1,68 +1,64 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { currentUser } from "@clerk/nextjs/server"; // updated import: use @clerk/nextjs/server
 
-import { createTRPCRouter, publicProcedure, devProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { posts } from "~/server/db/schema";
-import { desc, eq } from "drizzle-orm";
-
-// Define the post schema for input validation
-const postInputSchema = z.object({
-  title: z.string().min(3).max(256),
-  content: z.string().min(10),
-});
 
 export const postRouter = createTRPCRouter({
-  // Get all posts
   getAll: publicProcedure.query(async ({ ctx }) => {
-    const allPosts = await ctx.db.query.posts.findMany({
-      orderBy: [desc(posts.createdAt)],
-    });
-    return allPosts;
+    try {
+      const result = await ctx.db.query.posts.findMany({
+        orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+      });
+      return result;
+    } catch (error: unknown) {
+      console.error("Error fetching posts:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to fetch posts",
+      });
+    }
   }),
-  
-  // Get a single post by ID
-  getById: publicProcedure
-    .input(z.object({ id: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const post = await ctx.db.query.posts.findFirst({
-        where: eq(posts.id, input.id),
-      });
-      return post;
-    }),
 
-  // Create a new post (only available to developers)
-  create: devProcedure
-    .input(postInputSchema)
+  create: publicProcedure
+    .input(
+      z.object({
+        title: z.string().min(1).max(100),
+        content: z.string().min(1),
+        name: z.string().min(1),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
-      // Get the user ID from auth context
-      if (!ctx.userId) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
+      try {
+        // Get the current user using Clerk's server-side API
+        const user = await currentUser();
+        const authorId = user?.id;
+        
+        if (!authorId) {
+          throw new TRPCError({ 
+            code: "UNAUTHORIZED", 
+            message: "You must be logged in to create a post" 
+          });
+        }
+
+        await ctx.db.insert(posts).values({
+          title: input.title,
+          content: input.content,
+          authorId,
+          name: input.name,
+        });
+        
+        return { 
+          success: true as const,
+          message: "Post created successfully"
+        };
+      } catch (error: unknown) {
+        console.error("Error creating post:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create post",
+        });
       }
-      
-      // Insert the post
-      await ctx.db.insert(posts).values({
-        title: input.title,
-        content: input.content,
-        authorId: ctx.userId,
-        name: input.title, // For backward compatibility
-      });
-      
-      // Get the latest post that was just created
-      const newPost = await ctx.db.query.posts.findFirst({
-        orderBy: [desc(posts.createdAt)],
-      });
-      
-      return {
-        success: true,
-        post: newPost,
-      };
-    }),
-    
-  // Delete a post (only available to developers)
-  delete: devProcedure
-    .input(z.object({ id: z.number() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.delete(posts).where(eq(posts.id, input.id));
-      return { success: true };
     }),
 });

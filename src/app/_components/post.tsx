@@ -24,7 +24,8 @@ export function LatestPost() {
           e.preventDefault();
           createPost.mutate({ 
             title, 
-            content 
+            content,
+            name: "Developer" // Add the required name parameter
           });
         }}
         className="flex flex-col gap-2"
