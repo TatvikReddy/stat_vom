@@ -33,7 +33,7 @@ export default function PostsPage() {
       <div className="container mx-auto py-16 px-4 relative z-10">
         <section className="mb-16">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-center mb-12">
-            Developer <span className="text-[#ff9966]">Updates</span>
+            <span className="text-white">Developer</span> <span className="text-[#ff9966]">Updates</span>
           </h1>
           
           <div className="max-w-4xl mx-auto">

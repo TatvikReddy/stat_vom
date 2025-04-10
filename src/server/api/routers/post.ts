@@ -41,6 +41,16 @@ export const postRouter = createTRPCRouter({
             message: "You must be logged in to create a post" 
           });
         }
+        
+        // Check if user has developer role in publicMetadata
+        const isDeveloper = user?.publicMetadata?.typeUser === "Dev";
+        
+        if (!isDeveloper) {
+          throw new TRPCError({ 
+            code: "FORBIDDEN", 
+            message: "Only developers can create posts" 
+          });
+        }
 
         await ctx.db.insert(posts).values({
           title: input.title,

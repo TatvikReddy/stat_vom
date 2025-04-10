@@ -12,13 +12,11 @@ export default function CreatePostForm() {
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
 
-  // List of authorized developer IDs - add your Clerk user ID here
-  const authorizedDevIds = [
-    // Add your Clerk user ID here
-    "user_2NF8fKs92o9PLKlO", // Example ID - replace with your actual developer IDs
-  ];
-
-  const isDeveloper = isSignedIn && user && authorizedDevIds.includes(user.id);
+  // Check if the user is a developer based on publicMetadata
+  const isDeveloper =
+    isSignedIn &&
+    user?.publicMetadata &&
+    user.publicMetadata.typeUser === "Dev";
 
   const utils = api.useUtils();
   const createPost = api.post.create.useMutation({
