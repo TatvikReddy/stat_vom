@@ -1,18 +1,24 @@
 import Link from "next/link";
 import Image from "next/image";
-
+import { type Metadata } from "next";
 import { HydrateClient } from "~/trpc/server";
+import { NewsGrid } from "./_components/NewsGrid";
+
+export const metadata: Metadata = {
+  title: "News - Vault On Mars",
+  description: "Latest news, updates, and announcements for Vault On Mars",
+};
 
 export default async function NewsPage() {
-  // Mock data for news categories
+  // Categories for filtering - these match the ones in NewsCreateForm
   const categories = [
-    { id: 1, name: "Game Updates", slug: "updates" },
-    { id: 2, name: "Community Events", slug: "events" },
-    { id: 3, name: "Development", slug: "development" },
-    { id: 4, name: "Announcements", slug: "announcements" },
+    { id: "updates", name: "Game Updates", slug: "updates" },
+    { id: "events", name: "Community Events", slug: "events" },
+    { id: "development", name: "Development", slug: "development" },
+    { id: "announcements", name: "Announcements", slug: "announcements" },
   ];
 
-  // Mock data for featured news
+  // Mock data for featured and list of news
   const featuredNews = {
     id: 1,
     title: "Major Update: Olympus Mons Expansion",
@@ -20,102 +26,59 @@ export default async function NewsPage() {
     category: "Game Updates",
     excerpt: "Explore the largest volcano in the solar system with our new expansion. Discover rare minerals and face unique challenges in this harsh environment.",
     image: "/img1.jpg",
-    link: "/news/olympus-mons-expansion"
+    link: "/news/olympus-mons-expansion",
   };
-
-  // Mock data for news articles
   const newsArticles = [
-    {
-      id: 2,
-      title: "New Mars Colony Update",
-      date: "March 15, 2025",
-      category: "Game Updates",
-      excerpt: "Explore the new Olympus Mons region and discover rare resources.",
-      image: "/img1.jpg",
-      link: "/news/new-mars-colony-update"
-    },
-    {
-      id: 3,
-      title: "Community Challenge: Survive the Dust Storm",
-      date: "March 10, 2025",
-      category: "Community Events",
-      excerpt: "Join our community event and test your colony's resilience against the harshest Martian dust storms.",
-      image: "/img1.jpg",
-      link: "/news/community-challenge-dust-storm"
-    },
-    {
-      id: 4,
-      title: "Research Breakthrough: Water Recycling",
-      date: "March 5, 2025",
-      category: "Development",
-      excerpt: "New technology allows for 95% water efficiency in your colony. Learn how to implement this system.",
-      image: "/img1.jpg",
-      link: "/news/research-breakthrough-water"
-    },
-    {
-      id: 5,
-      title: "Vault On Mars: Q1 2025 Roadmap",
-      date: "February 28, 2025",
-      category: "Announcements",
-      excerpt: "Check out our development roadmap for the first quarter of 2025. New features, improvements, and more!",
-      image: "/img1.jpg",
-      link: "/news/q1-2025-roadmap"
-    },
-    {
-      id: 6,
-      title: "Introducing New Colony Templates",
-      date: "February 20, 2025",
-      category: "Game Updates",
-      excerpt: "Start your Mars adventure with specialized colony templates designed for different playstyles.",
-      image: "/img1.jpg",
-      link: "/news/new-colony-templates"
-    },
-    {
-      id: 7,
-      title: "Community Spotlight: Best Colony Designs",
-      date: "February 15, 2025",
-      category: "Community Events",
-      excerpt: "See the most efficient and creative colony designs from our community members.",
-      image: "/img1.jpg",
-      link: "/news/community-spotlight-colony-designs"
-    },
+    { id: 2, title: "New Mars Colony Update", date: "March 15, 2025", category: "Game Updates", excerpt: "Explore the new Olympus Mons region and discover rare resources.", image: "/img1.jpg", link: "/news/new-mars-colony-update" },
+    { id: 3, title: "Community Challenge: Survive the Dust Storm", date: "March 10, 2025", category: "Community Events", excerpt: "Join our community event and test your colony's resilience against the harshest Martian dust storms.", image: "/img1.jpg", link: "/news/community-challenge-dust-storm" },
+    { id: 4, title: "Research Breakthrough: Water Recycling", date: "March 5, 2025", category: "Development", excerpt: "New technology allows for 95% water efficiency in your colony. Learn how to implement this system.", image: "/img1.jpg", link: "/news/research-breakthrough-water" },
+    // Additional mock articles
+    { id: 5, title: "Vault On Mars: Q1 2025 Roadmap", date: "February 28, 2025", category: "Announcements", excerpt: "Check out our development roadmap for the first quarter of 2025. New features, improvements, and more!", image: "/img1.jpg", link: "/news/q1-2025-roadmap" },
+    { id: 6, title: "Introducing New Colony Templates", date: "February 20, 2025", category: "Game Updates", excerpt: "Start your Mars adventure with specialized colony templates designed for different playstyles.", image: "/img1.jpg", link: "/news/new-colony-templates" },
+    { id: 7, title: "Community Spotlight: Best Colony Designs", date: "February 15, 2025", category: "Community Events", excerpt: "See the most efficient and creative colony designs from our community members.", image: "/img1.jpg", link: "/news/community-spotlight-colony-designs" },
   ];
 
   return (
-    <HydrateClient>
+    <main className="min-h-screen bg-black text-white">
       {/* Hero Section */}
-      <section className="relative py-20 bg-black">
-        <div className="absolute inset-0 opacity-30 z-0">
-          <Image 
-            src="/img1.jpg" 
-            alt="Mars News" 
-            fill 
+      <section className="relative bg-black py-20">
+        <div className="absolute inset-0 z-0 opacity-30">
+          <Image
+            src="/img1.jpg"
+            alt="Mars News"
+            fill
             className="object-cover"
             quality={80}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
         </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Latest News</h1>
-          <p className="text-xl text-white/80 max-w-3xl">
-            Stay updated with the latest announcements, game updates, and community events for Vault On Mars.
+
+        <div className="container relative z-10 mx-auto px-4">
+          <h1 className="mb-6 text-4xl font-bold text-white md:text-5xl">
+            Latest News
+          </h1>
+          <p className="max-w-3xl text-xl text-white/80">
+            Stay updated with the latest announcements, game updates, and
+            community events for Vault On Mars.
           </p>
         </div>
       </section>
-      
+
       {/* News Categories */}
-      <section className="py-8 bg-black border-b border-white/10">
+      <section className="border-b border-white/10 bg-black py-8">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Link href="/news" className="px-4 py-2 bg-[#ff9966] text-black font-medium rounded-lg hover:bg-[#ff8855] transition-all">
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link
+              href="/news"
+              className="rounded-lg bg-[#ff9966] px-4 py-2 font-medium text-black transition-all hover:bg-[#ff8855]"
+            >
               All News
             </Link>
             {categories.map((category) => (
-              <Link 
-                key={category.id} 
+              <Link
+                key={category.id}
                 href={`/news/category/${category.slug}`}
-                className="px-4 py-2 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition-all"
+                className="rounded-lg bg-white/10 px-4 py-2 font-medium text-white transition-all hover:bg-white/20"
               >
                 {category.name}
               </Link>
@@ -123,21 +86,15 @@ export default async function NewsPage() {
           </div>
         </div>
       </section>
-      
-      {/* Featured News */}
+
+      {/* Featured News Section */}
       <section className="py-12 bg-gradient-to-b from-black to-gray-900">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-white mb-8">Featured News</h2>
-          
-          <div className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10">
+          <div className="overflow-hidden rounded-lg border border-white/10 bg-white/5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="relative h-64 md:h-auto">
-                <Image 
-                  src={featuredNews.image} 
-                  alt={featuredNews.title} 
-                  fill 
-                  className="object-cover"
-                />
+              <div className="relative h-64">
+                <Image src={featuredNews.image} alt={featuredNews.title} fill className="object-cover" />
               </div>
               <div className="p-6 flex flex-col justify-center">
                 <div className="text-[#ff9966] text-sm mb-2">{featuredNews.date} • {featuredNews.category}</div>
@@ -151,23 +108,17 @@ export default async function NewsPage() {
           </div>
         </div>
       </section>
-      
+
       {/* News Articles Grid */}
       <section className="py-12 bg-black">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-white mb-8">All News</h2>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {newsArticles.map((article) => (
+            {newsArticles.map(article => (
               <Link key={article.id} href={article.link} className="group">
-                <div className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 h-full transition-all group-hover:border-[#ff9966]/50 group-hover:bg-white/10">
+                <div className="overflow-hidden rounded-lg border border-white/10 bg-white/5 h-full transition-all group-hover:border-[#ff9966]/50 group-hover:bg-white/10">
                   <div className="relative h-48">
-                    <Image 
-                      src={article.image} 
-                      alt={article.title} 
-                      fill 
-                      className="object-cover"
-                    />
+                    <Image src={article.image} alt={article.title} fill className="object-cover" />
                   </div>
                   <div className="p-6">
                     <div className="text-[#ff9966] text-sm mb-2">{article.date} • {article.category}</div>
@@ -179,7 +130,6 @@ export default async function NewsPage() {
               </Link>
             ))}
           </div>
-          
           {/* Pagination */}
           <div className="flex justify-center mt-12">
             <div className="flex space-x-2">
@@ -200,32 +150,35 @@ export default async function NewsPage() {
           </div>
         </div>
       </section>
-      
+
+      <HydrateClient>
+        <NewsGrid />
+      </HydrateClient>
+
       {/* Newsletter Subscription */}
-      <section className="py-16 bg-gradient-to-r from-[#ff9966]/20 to-black">
+      <section className="bg-gradient-to-r from-[#ff9966]/20 to-black py-16">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">Stay Updated</h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-8">
-            Subscribe to our newsletter to receive the latest news and updates directly to your inbox.
+          <h2 className="mb-6 text-3xl font-bold text-white">Stay Updated</h2>
+          <p className="mx-auto mb-8 max-w-2xl text-xl text-white/80">
+            Subscribe to our newsletter to receive the latest news and updates
+            directly to your inbox.
           </p>
-          
-          <div className="max-w-md mx-auto">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <input 
-                type="email" 
-                placeholder="Your email address" 
-                className="flex-grow px-4 py-3 bg-white/10 backdrop-blur-sm text-white rounded-lg border border-white/20 focus:outline-none focus:border-[#ff9966]"
-              />
-              <button className="px-6 py-3 bg-[#ff9966] text-black font-bold rounded-lg hover:bg-[#ff8855] transition-all whitespace-nowrap">
-                Subscribe
-              </button>
-            </div>
-            <p className="text-white/60 text-sm mt-4">
-              We respect your privacy. Unsubscribe at any time.
-            </p>
-          </div>
+
+          <form className="mx-auto flex max-w-lg gap-4">
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              className="flex-1 rounded-lg border border-white/30 bg-white/10 px-4 py-3 text-white focus:border-[#ff9966] focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="whitespace-nowrap rounded-lg bg-[#ff9966] px-6 py-3 font-bold text-black transition-all hover:bg-[#ff8855]"
+            >
+              Subscribe
+            </button>
+          </form>
         </div>
       </section>
-    </HydrateClient>
+    </main>
   );
 }

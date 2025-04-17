@@ -34,21 +34,21 @@ export const postRouter = createTRPCRouter({
         // Get the current user using Clerk's server-side API
         const user = await currentUser();
         const authorId = user?.id;
-        
+
         if (!authorId) {
-          throw new TRPCError({ 
-            code: "UNAUTHORIZED", 
-            message: "You must be logged in to create a post" 
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "You must be logged in to create a post",
           });
         }
-        
+
         // Check if user has developer role in publicMetadata
         const isDeveloper = user?.publicMetadata?.typeUser === "Dev";
-        
+
         if (!isDeveloper) {
-          throw new TRPCError({ 
-            code: "FORBIDDEN", 
-            message: "Only developers can create posts" 
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Only developers can create posts",
           });
         }
 
@@ -58,10 +58,10 @@ export const postRouter = createTRPCRouter({
           authorId,
           name: input.name,
         });
-        
-        return { 
+
+        return {
           success: true as const,
-          message: "Post created successfully"
+          message: "Post created successfully",
         };
       } catch (error: unknown) {
         console.error("Error creating post:", error);

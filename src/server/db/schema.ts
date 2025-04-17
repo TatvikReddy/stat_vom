@@ -1,24 +1,36 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
 import { sql } from "drizzle-orm";
-import {
-  int,
-  timestamp,
-  // primaryKey, // Removing unused import
-  varchar,
-  text,
-} from "drizzle-orm/mysql-core";
+import { int, timestamp, varchar, text } from "drizzle-orm/mysql-core";
 import { mysqlTable } from "drizzle-orm/mysql-core";
 
+// User posts table (legacy)
 export const posts = mysqlTable("posts", {
-  id: int("id").autoincrement().primaryKey(), // "autoincrement" is correct, ignore spell warning
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 128 }),
   title: varchar("title", { length: 100 }).notNull(),
   content: text("content").notNull(),
-  name: varchar("name", { length: 100 }),
-  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
   updatedAt: timestamp("updated_at").onUpdateNow(),
-  authorId: varchar("author_id", { length: 100 }),
+  authorId: varchar("author_id", { length: 255 }),
+});
+
+// News posts table for consolidated system
+export const newsPosts = mysqlTable("news_posts", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 100 }).notNull(),
+  excerpt: varchar("excerpt", { length: 255 }).notNull(), // Short description
+  content: text("content").notNull(),
+  category: varchar("category", { length: 50 }).notNull(),
+  image: varchar("image", { length: 255 }).default("/img1.jpg"),
+  authorName: varchar("author_name", { length: 100 }),
+  authorId: varchar("author_id", { length: 100 }), // Clerk user ID
+  published: int("published").default(1), // 1=published, 0=draft
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at").onUpdateNow(),
 });
 
 export type Post = typeof posts.$inferSelect;
+export type NewsPost = typeof newsPosts.$inferSelect;

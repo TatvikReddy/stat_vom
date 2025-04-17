@@ -24,11 +24,11 @@ export const getUser = async (): Promise<User | null> => {
  */
 export const isUserDeveloper = async (): Promise<boolean> => {
   const user = await getUser();
-  
+
   if (!user) {
     return false;
   }
-  
+
   // Check if the user has the developer role in publicMetadata
   const metadata = user.publicMetadata;
   return metadata?.typeUser === "Dev";

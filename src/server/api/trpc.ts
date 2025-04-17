@@ -107,60 +107,41 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
 /**
- * Protected procedure for developers only
- * 
+ * Developer-only procedure
+ *
  * This procedure ensures that the user is authenticated and has the developer role.
  * It will throw an error if the user is not authenticated or doesn't have the right role.
  */
 export const devProcedure = t.procedure
   .use(timingMiddleware)
-  .use(async ({ ctx, next }) => {
-    try {
-      // Get auth data directly
-      const authData = await auth();
-      
-      // Check if user is authenticated
-      if (!authData.userId) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Not authenticated"
-        });
-      }
-      
-      // Store the user ID for later use
-      const userId = authData.userId;
-      
-      // Import dynamically to avoid circular dependency
-      const { isUserDeveloper } = await import("../../server/auth");
-      const isDeveloper = await isUserDeveloper();
-      
-      if (!isDeveloper) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Not authorized - Developer access only"
-        });
-      }
-      
-      // All checks passed, continue with the enhanced context
-      return next({
-        ctx: {
-          ...ctx,
-          userId,
-        },
-      });
-    } catch (error) {
-      // Handle known errors
-      if (error instanceof TRPCError) {
-        throw error;
-      }
-      
-      // Log and convert unknown errors
-      console.error("Error in dev procedure:", 
-        error instanceof Error ? error.message : "Unknown error");
-      
+  .use(async ({ next, ctx }) => {
+    // Get the current user from Clerk (await the promise)
+    const { userId, sessionClaims } = await auth();
+
+    if (!userId) {
       throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Authentication error"
+        code: "UNAUTHORIZED",
+        message: "You must be logged in to perform this action",
       });
     }
+
+    const isUserDev =
+      sessionClaims?.publicMetadata &&
+      (sessionClaims.publicMetadata as Record<string, unknown>).typeUser ===
+        "Dev";
+
+    if (!isUserDev) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Only developers can perform this action",
+      });
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        userId,
+        user: { id: userId, isDeveloper: true },
+      },
+    });
   });

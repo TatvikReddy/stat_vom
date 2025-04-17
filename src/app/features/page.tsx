@@ -9,126 +9,139 @@ export default async function FeaturesPage() {
     {
       id: 1,
       title: "Limitless Exploration",
-      description: "Traverse the Martian landscape, discover hidden resources, and map uncharted territories. From the vast Valles Marineris to the towering Olympus Mons, every location offers unique challenges and opportunities.",
+      description:
+        "Traverse the Martian landscape, discover hidden resources, and map uncharted territories. From the vast Valles Marineris to the towering Olympus Mons, every location offers unique challenges and opportunities.",
       image: "/img1.jpg",
       link: "/features/exploration",
       details: [
         "Discover rare resources in unexplored regions",
         "Map the Martian terrain with advanced surveying tools",
         "Face environmental hazards like dust storms and radiation",
-        "Establish outposts in strategic locations"
-      ]
+        "Establish outposts in strategic locations",
+      ],
     },
     {
       id: 2,
       title: "Colony Management",
-      description: "Build and manage your Mars colony with advanced resource management and strategic planning. Balance oxygen production, water recycling, food cultivation, and energy generation to ensure your colony's survival.",
+      description:
+        "Build and manage your Mars colony with advanced resource management and strategic planning. Balance oxygen production, water recycling, food cultivation, and energy generation to ensure your colony's survival.",
       image: "/img1.jpg",
       link: "/features/colony",
       details: [
         "Design efficient colony layouts for optimal resource usage",
         "Manage life support systems to keep colonists alive",
         "Expand your base with specialized modules and facilities",
-        "Balance resource production and consumption"
-      ]
+        "Balance resource production and consumption",
+      ],
     },
     {
       id: 3,
       title: "Research & Development",
-      description: "Unlock new technologies through scientific research to improve your colony's survival chances. Invest in various research paths to adapt to the harsh Martian environment and overcome challenges.",
+      description:
+        "Unlock new technologies through scientific research to improve your colony's survival chances. Invest in various research paths to adapt to the harsh Martian environment and overcome challenges.",
       image: "/img1.jpg",
       link: "/features/research",
       details: [
         "Unlock advanced technologies through research trees",
         "Improve efficiency of life support systems",
         "Develop new materials suited for the Martian environment",
-        "Create sustainable ecosystems for long-term survival"
-      ]
+        "Create sustainable ecosystems for long-term survival",
+      ],
     },
     {
       id: 4,
       title: "Colonist Management",
-      description: "Recruit specialists with unique skills and manage their well-being. Each colonist has individual needs, skills, and psychological profiles that affect their performance and the colony's success.",
+      description:
+        "Recruit specialists with unique skills and manage their well-being. Each colonist has individual needs, skills, and psychological profiles that affect their performance and the colony's success.",
       image: "/img1.jpg",
       link: "/features/colonists",
       details: [
         "Recruit specialists with unique abilities and skills",
         "Manage colonist morale and psychological well-being",
         "Assign roles based on individual strengths",
-        "Train colonists to improve their capabilities"
-      ]
+        "Train colonists to improve their capabilities",
+      ],
     },
     {
       id: 5,
       title: "Trade & Economics",
-      description: "Establish trade routes with Earth and other colonies, manage your economy, and secure valuable contracts. Create a sustainable economic model for your colony's growth and prosperity.",
+      description:
+        "Establish trade routes with Earth and other colonies, manage your economy, and secure valuable contracts. Create a sustainable economic model for your colony's growth and prosperity.",
       image: "/img1.jpg",
       link: "/features/trade",
       details: [
         "Trade resources with Earth and other Martian colonies",
         "Secure contracts for specialized production",
         "Manage your colony's economy and finances",
-        "Invest in infrastructure to increase production capacity"
-      ]
+        "Invest in infrastructure to increase production capacity",
+      ],
     },
     {
       id: 6,
       title: "Challenges & Events",
-      description: "Face dynamic challenges and participate in special events that test your colony's resilience. From natural disasters to supply shortages, every challenge provides an opportunity to prove your management skills.",
+      description:
+        "Face dynamic challenges and participate in special events that test your colony's resilience. From natural disasters to supply shortages, every challenge provides an opportunity to prove your management skills.",
       image: "/img1.jpg",
       link: "/features/challenges",
       details: [
         "Overcome environmental disasters like dust storms",
         "Manage resource shortages and supply chain disruptions",
         "Participate in community-wide events and competitions",
-        "Complete special missions for unique rewards"
-      ]
-    }
+        "Complete special missions for unique rewards",
+      ],
+    },
   ];
 
   return (
     <HydrateClient>
       {/* Hero Section */}
-      <section className="relative py-24 bg-black overflow-hidden">
-        <div className="absolute inset-0 opacity-30 z-0">
-          <Image 
-            src="/img1.jpg" 
-            alt="Mars Colony" 
-            fill 
+      <section className="relative overflow-hidden bg-black py-24">
+        <div className="absolute inset-0 z-0 opacity-30">
+          <Image
+            src="/img1.jpg"
+            alt="Mars Colony"
+            fill
             className="object-cover"
             quality={100}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
         </div>
-        
-        <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">Game Features</h1>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Explore the comprehensive features that make Vault On Mars the ultimate Mars colonization simulation experience.
+
+        <div className="container relative z-10 mx-auto px-4 text-center">
+          <h1 className="mb-6 text-5xl font-bold text-white md:text-6xl">
+            Game Features
+          </h1>
+          <p className="mx-auto max-w-3xl text-xl text-white/80">
+            Explore the comprehensive features that make Vault On Mars the
+            ultimate Mars colonization simulation experience.
           </p>
         </div>
       </section>
-      
+
       {/* Features Overview */}
-      <section className="py-16 bg-black">
+      <section className="bg-black py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {gameFeatures.map((feature) => (
               <Link key={feature.id} href={feature.link} className="group">
-                <div className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 h-full transition-all group-hover:border-[#ff9966]/50 group-hover:bg-white/10">
+                <div className="h-full overflow-hidden rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm transition-all group-hover:border-[#ff9966]/50 group-hover:bg-white/10">
                   <div className="relative h-48">
-                    <Image 
-                      src={feature.image} 
-                      alt={feature.title} 
-                      fill 
+                    <Image
+                      src={feature.image}
+                      alt={feature.title}
+                      fill
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-                    <h3 className="absolute bottom-4 left-4 text-2xl font-bold text-white group-hover:text-[#ff9966] transition-colors">{feature.title}</h3>
+                    <h3 className="absolute bottom-4 left-4 text-2xl font-bold text-white transition-colors group-hover:text-[#ff9966]">
+                      {feature.title}
+                    </h3>
                   </div>
                   <div className="p-6">
-                    <p className="text-white/70 mb-4">{feature.description}</p>
-                    <div className="text-[#ff9966] font-medium">Learn More →</div>
+                    <p className="mb-4 text-white/70">{feature.description}</p>
+                    <div className="font-medium text-[#ff9966]">
+                      Learn More →
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -136,43 +149,59 @@ export default async function FeaturesPage() {
           </div>
         </div>
       </section>
-      
+
       {/* Detailed Feature Showcase */}
       {gameFeatures.map((feature, index) => (
-        <section 
-          key={feature.id} 
+        <section
+          key={feature.id}
           id={`feature-${feature.id}`}
-          className={`py-20 ${index % 2 === 0 ? 'bg-gradient-to-r from-[#ff9966]/10 to-black' : 'bg-black'}`}
+          className={`py-20 ${index % 2 === 0 ? "bg-gradient-to-r from-[#ff9966]/10 to-black" : "bg-black"}`}
         >
           <div className="container mx-auto px-4">
-            <div className={`grid grid-cols-1 md:grid-cols-2 gap-12 items-center ${index % 2 === 0 ? '' : 'md:flex-row-reverse'}`}>
-              <div className="relative h-80 md:h-96 rounded-lg overflow-hidden">
-                <Image 
-                  src={feature.image} 
-                  alt={feature.title} 
-                  fill 
+            <div
+              className={`grid grid-cols-1 items-center gap-12 md:grid-cols-2 ${index % 2 === 0 ? "" : "md:flex-row-reverse"}`}
+            >
+              <div className="relative h-80 overflow-hidden rounded-lg md:h-96">
+                <Image
+                  src={feature.image}
+                  alt={feature.title}
+                  fill
                   className="object-cover"
                 />
               </div>
-              
+
               <div>
-                <h2 className="text-3xl font-bold text-white mb-6">{feature.title}</h2>
-                <p className="text-lg text-white/80 mb-8">{feature.description}</p>
-                
-                <ul className="space-y-3 mb-8">
+                <h2 className="mb-6 text-3xl font-bold text-white">
+                  {feature.title}
+                </h2>
+                <p className="mb-8 text-lg text-white/80">
+                  {feature.description}
+                </p>
+
+                <ul className="mb-8 space-y-3">
                   {feature.details.map((detail, i) => (
                     <li key={i} className="flex items-start">
-                      <svg className="w-6 h-6 text-[#ff9966] mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      <svg
+                        className="mr-2 h-6 w-6 flex-shrink-0 text-[#ff9966]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                       <span className="text-white/70">{detail}</span>
                     </li>
                   ))}
                 </ul>
-                
-                <Link 
+
+                <Link
                   href={feature.link}
-                  className="px-6 py-3 bg-[#ff9966] text-black font-bold rounded-lg hover:bg-[#ff8855] transition-all inline-block"
+                  className="inline-block rounded-lg bg-[#ff9966] px-6 py-3 font-bold text-black transition-all hover:bg-[#ff8855]"
                 >
                   Explore {feature.title}
                 </Link>
@@ -181,19 +210,28 @@ export default async function FeaturesPage() {
           </div>
         </section>
       ))}
-      
+
       {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-b from-black to-gray-900 text-center">
+      <section className="bg-gradient-to-b from-black to-gray-900 py-20 text-center">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-white mb-6">Ready to Start Your Mars Adventure?</h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-10">
-            Join thousands of players already building and managing their own Mars colonies.
+          <h2 className="mb-6 text-4xl font-bold text-white">
+            Ready to Start Your Mars Adventure?
+          </h2>
+          <p className="mx-auto mb-10 max-w-2xl text-xl text-white/80">
+            Join thousands of players already building and managing their own
+            Mars colonies.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/download" className="px-8 py-3 bg-[#ff9966] text-black font-bold rounded-lg hover:bg-[#ff8855] transition-all transform hover:scale-105">
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Link
+              href="/download"
+              className="transform rounded-lg bg-[#ff9966] px-8 py-3 font-bold text-black transition-all hover:scale-105 hover:bg-[#ff8855]"
+            >
               Download Now
             </Link>
-            <Link href="/about" className="px-8 py-3 bg-white/10 backdrop-blur-sm text-white font-bold rounded-lg hover:bg-white/20 transition-all transform hover:scale-105 border border-white/30">
+            <Link
+              href="/about"
+              className="transform rounded-lg border border-white/30 bg-white/10 px-8 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
+            >
               Learn More
             </Link>
           </div>
