@@ -1,81 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
-
-import { HydrateClient } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 
 export default async function Home() {
-  // Mock data for latest news
-  const latestNews = [
-    {
-      id: 1,
-      title: "Alien Footprints Discovered",
-      date: "March 15, 2025",
-      excerpt:
-        "Mysterious alien footprints found near Olympus Mons. What secrets await your colony?",
-      link: "/news/alien-footprints-discovered",
-    },
-    {
-      id: 2,
-      title: "Community Challenge: Survive the Dust Storm",
-      date: "March 10, 2025",
-      excerpt:
-        "Test your colony's resilience against the harshest Martian dust storms in our latest event.",
-      link: "/news/community-challenge-dust-storm",
-    },
-    {
-      id: 3,
-      title: "Research Breakthrough: High-Yield Crops",
-      date: "March 5, 2025",
-      excerpt:
-        "New farming technology allows for 95% more efficient food production in your colony.",
-      link: "/news/research-breakthrough-crops",
-    },
-
-    {
-      id: 4,
-      title: "Viral Outbreak",
-      date: "April 10, 2025",
-      excerpt: "New outbourne virus is spreading rapidly.",
-      link: "/news/research-breakthrough-crops",
-    },
-
-    {
-      id: 5,
-      title: "New Species Discovered",
-      date: "April 10, 2025",
-      excerpt: "New species has been discovered similar to us.",
-      link: "/news/research-breakthrough-crops",
-    },
-  ];
-
-  // Mock data for game features
-  const gameFeatures = [
-    {
-      id: 1,
-      title: "Alien Mysteries",
-      description:
-        "Unearth mysterious alien footprints and artifacts as you expand your colony. Research these findings to unlock their secrets and advanced technologies.",
-      image: "/exploration.jpg",
-      link: "/features/exploration",
-    },
-    {
-      id: 2,
-      title: "Colony Management",
-      description:
-        "Build and manage your Mars settlement in a challenging side-scrolling environment. Balance resources, population growth, and expansion.",
-      image: "/colony.jpg",
-      link: "/features/colony",
-    },
-    {
-      id: 3,
-      title: "Dynamic Challenges & Boons",
-      description:
-        "Face unpredictable events like dust storms and famine, or benefit from baby booms and resource discoveries in this turn-based yearly simulation.",
-      image: "/research.jpg",
-      link: "/features/challenges",
-    },
-  ];
+  const latestNews = await api.news.getAll();
+  const gameFeatures = await api.features.getAll();
 
   return (
     <HydrateClient>
@@ -160,13 +90,17 @@ export default async function Home() {
             {latestNews.map((item) => (
               <Link
                 key={item.id}
-                href={item.link}
+                href={`/news/${item.id}`}
                 className="group min-w-[475px]"
               >
                 <div className="h-full overflow-hidden rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm transition-all group-hover:border-[#ff9966]/50 group-hover:bg-white/10">
                   <div className="p-6">
                     <div className="mb-2 text-sm text-[#ff9966]">
-                      {item.date}
+                      {new Date(item.createdAt).toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
                     </div>
                     <h3 className="mb-3 text-xl font-bold text-white transition-colors group-hover:text-[#ff9966]">
                       {item.title}

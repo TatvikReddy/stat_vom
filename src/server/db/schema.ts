@@ -34,3 +34,37 @@ export const newsPosts = mysqlTable("news_posts", {
 
 export type Post = typeof posts.$inferSelect;
 export type NewsPost = typeof newsPosts.$inferSelect;
+
+// Features table
+export const features = mysqlTable("features", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 100 }).notNull(),
+  description: text("description").notNull(),
+  image: varchar("image", { length: 255 }).default("/img1.jpg"),
+  link: varchar("link", { length: 255 }).notNull(),
+  details: text("details").notNull(),
+  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
+// Analytics table
+export const analytics = mysqlTable("analytics", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: varchar("user_id", { length: 255 }).notNull(),
+  key: varchar("key", { length: 100 }).notNull(),
+  value: int("value").notNull(),
+  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
+// Achievements table
+export const achievements = mysqlTable("achievements", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: varchar("user_id", { length: 255 }).notNull(),
+  title: varchar("title", { length: 100 }).notNull(),
+  description: text("description").notNull(),
+  achievedAt: timestamp("achieved_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
+// Derived Types
+export type Feature = typeof features.$inferSelect;
+export type AnalyticsRecord = typeof analytics.$inferSelect;
+export type Achievement = typeof achievements.$inferSelect;
