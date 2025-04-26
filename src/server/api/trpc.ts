@@ -134,6 +134,32 @@ export const protectedProcedure = t.procedure
   });
 
 /**
+ * Protected (authenticated) procedure
+ *
+ * This procedure ensures that the user is authenticated. It will throw an error if the user is not
+ * authenticated.
+ */
+export const protectedProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(async ({ ctx, next }) => {
+    // Use Clerk's auth() to get the user ID from cookies/headers
+    const { userId } = await auth();
+    if (!userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You must be logged in to call this endpoint",
+      });
+    }
+    // Make userId available in downstream ctx
+    return next({
+      ctx: {
+        ...ctx,
+        userId,
+      },
+    });
+  });
+
+/**
  * Developer-only procedure
  *
  * This procedure ensures that the user is authenticated and has the developer role.

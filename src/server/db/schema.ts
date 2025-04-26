@@ -14,6 +14,9 @@ import {
 import { int, timestamp, varchar, text } from "drizzle-orm/mysql-core";
 import { mysqlTable } from "drizzle-orm/mysql-core";
 import { boolean, datetime, serial, uniqueIndex } from "drizzle-orm/mysql-core";
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 /**
