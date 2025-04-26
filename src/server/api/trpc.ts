@@ -104,3 +104,72 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+<<<<<<< Updated upstream
+=======
+
+/**
+ * Protected (authenticated) procedure
+ *
+ * This procedure ensures that the user is authenticated. It will throw an error if the user is not
+ * authenticated.
+ */
+export const protectedProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(async ({ ctx, next }) => {
+    // Use Clerk's auth() to get the user ID from cookies/headers
+    const { userId } = await auth();
+    if (!userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You must be logged in to call this endpoint",
+      });
+    }
+    // Make userId available in downstream ctx
+    return next({
+      ctx: {
+        ...ctx,
+        userId,
+      },
+    });
+  });
+
+/**
+ * Developer-only procedure
+ *
+ * This procedure ensures that the user is authenticated and has the developer role.
+ * It will throw an error if the user is not authenticated or doesn't have the right role.
+ */
+export const devProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(async ({ next, ctx }) => {
+    // Get the current user from Clerk (await the promise)
+    const { userId, sessionClaims } = await auth();
+
+    if (!userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You must be logged in to perform this action",
+      });
+    }
+
+    const isUserDev =
+      sessionClaims?.publicMetadata &&
+      (sessionClaims.publicMetadata as Record<string, unknown>).typeUser ===
+        "Dev";
+
+    if (!isUserDev) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Only developers can perform this action",
+      });
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        userId,
+        user: { id: userId, isDeveloper: true },
+      },
+    });
+  });
+>>>>>>> Stashed changes
