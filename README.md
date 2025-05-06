@@ -31,7 +31,6 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 ## Homepage
 
 - Add a scroll bar for the news
-- Combine Dev updates which is the type of system for News, not separate
 - Link the About page into Sections| Our story, Team and Mission
 - Add Research page
 - Create discord invite link, youtube and twitter page
@@ -55,7 +54,7 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 
 ## [Game] Features
 
-- Add back to home button
+- Add back functionality to home button
 - Remove one of the layouts (top)
 - Remove Learn More
   
