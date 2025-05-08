@@ -106,12 +106,6 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
-/**
- * Developer-only procedure
- *
- * This procedure ensures that the user is authenticated and has the developer role.
- * It will throw an error if the user is not authenticated or doesn't have the right role.
- */
 export const devProcedure = t.procedure
   .use(timingMiddleware)
   .use(async ({ next, ctx }) => {
@@ -142,6 +136,28 @@ export const devProcedure = t.procedure
         ...ctx,
         userId,
         user: { id: userId, isDeveloper: true },
+      },
+    });
+  });
+/**
+ * Protected (authenticated) procedure
+ *
+ * Ensures that the user is authenticated.
+ */
+export const protectedProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(async ({ next, ctx }) => {
+    const { userId } = await auth();
+    if (!userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You must be logged in to perform this action",
+      });
+    }
+    return next({
+      ctx: {
+        ...ctx,
+        userId,
       },
     });
   });

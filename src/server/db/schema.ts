@@ -1,49 +1,35 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
+// Drizzle ORM schema definitions
 import { sql } from "drizzle-orm";
-<<<<<<< Updated upstream
 import {
-  bigint,
-  index,
-  mysqlTableCreator,
-  timestamp,
+  int,
+  serial,
   varchar,
+  text,
+  timestamp,
+  datetime,
+  boolean,
+  uniqueIndex,
+  mysqlTable,
 } from "drizzle-orm/mysql-core";
-=======
-import { int, timestamp, varchar, text } from "drizzle-orm/mysql-core";
-import { mysqlTable } from "drizzle-orm/mysql-core";
-import { boolean, datetime, serial, uniqueIndex } from "drizzle-orm/mysql-core";
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
  * database instance for multiple projects.
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = mysqlTableCreator((name) => `stat_vom_${name}`);
+/** Posts table */
+export const posts = mysqlTable("posts", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 100 }).notNull(),
+  content: text("content").notNull(),
+  name: varchar("name", { length: 256 }).notNull(),
+  authorId: varchar("author_id", { length: 100 }).notNull(),
+  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  updatedAt: timestamp("updated_at").onUpdateNow(),
+});
+export type Post = typeof posts.$inferSelect;
 
-<<<<<<< Updated upstream
-export const posts = createTable(
-  "post",
-  {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow(),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
-);
-=======
-// News posts table for consolidated system
+/** News posts table */
 export const newsPosts = mysqlTable("news_posts", {
   id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 100 }).notNull(),
@@ -60,10 +46,9 @@ export const newsPosts = mysqlTable("news_posts", {
   updatedAt: timestamp("updated_at").onUpdateNow(),
 });
 
-export type Post = typeof posts.$inferSelect;
 export type NewsPost = typeof newsPosts.$inferSelect;
 
-// Features table
+/** Features table */
 export const features = mysqlTable("features", {
   id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 100 }).notNull(),
@@ -74,7 +59,7 @@ export const features = mysqlTable("features", {
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
 });
 
-// Achievements table (new version with unique index)
+/** Achievements table */
 export const achievements = mysqlTable("achievements", {
   id: serial("id").primaryKey(), // PK
   userId: int("user_id"), // FK into your users table
@@ -83,12 +68,12 @@ export const achievements = mysqlTable("achievements", {
   achievedAt: datetime("achieved_at").default(sql`CURRENT_TIMESTAMP`), // timestamp
 });
 
-// Define the unique index separately
+// Unique index for achievements per user and name
 export const userAchievementUniqueIndex = uniqueIndex(
   "user_achievement_unique"
 ).on(achievements.userId, achievements.name);
 
-// Analytics table
+/** Analytics table */
 export const analytics = mysqlTable("game_stats", {
   userId: int("user_id"), // FK into your users table
   longestSurvived: int("longest_survived").default(0),
@@ -108,6 +93,5 @@ export const analytics = mysqlTable("game_stats", {
 
 // Derived Types
 export type Feature = typeof features.$inferSelect;
-export type AnalyticsRecord = typeof analytics.$inferSelect;
 export type Achievement = typeof achievements.$inferSelect;
->>>>>>> Stashed changes
+export type AnalyticsRecord = typeof analytics.$inferSelect;

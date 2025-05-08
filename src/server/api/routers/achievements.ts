@@ -14,10 +14,11 @@ export const achievementsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     try {
       const all = await ctx.db.query.achievements.findMany({
-        orderBy: (ach, { asc }) => [asc(ach.achievedAt)],
+        // Order by achievedAt ascending
+        orderBy: { achievedAt: 'asc' },
       });
       return all;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error fetching achievements:", error);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
@@ -32,10 +33,10 @@ export const achievementsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       try {
         const userAchievements = await ctx.db.query.achievements.findMany({
-          where: (ach, { eq }) => eq(ach.userId, Number(input.userId)),
+          where: { userId: Number(input.userId) },
         });
         return userAchievements;
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Error fetching user achievements:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -57,12 +58,12 @@ export const achievementsRouter = createTRPCRouter({
       try {
         await ctx.db.insert(achievements).values({
           name: input.title,
-          achieved: false, // Default to not achieved
-          userId: Number(input.userId), // Ensure userId is a number
-          achievedAt: null, // Default to null
+          achieved: false,
+          userId: Number(input.userId),
+          achievedAt: null,
         });
         return { success: true };
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Error creating achievement:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -97,14 +98,13 @@ export const achievementsRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       try {
-        // Use raw SQL to handle conflicts
         await ctx.db.execute(
           sql`INSERT INTO achievements (user_id, name, achieved, achieved_at)
-              VALUES (${input.userId}, ${input.name}, ${input.achieved}, CURRENT_TIMESTAMP)
-              ON DUPLICATE KEY UPDATE achieved = ${input.achieved}, achieved_at = CURRENT_TIMESTAMP`
+            VALUES (${input.userId}, ${input.name}, ${input.achieved}, CURRENT_TIMESTAMP)
+            ON DUPLICATE KEY UPDATE achieved = ${input.achieved}, achieved_at = CURRENT_TIMESTAMP`
         );
         return { success: true };
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Error tracking achievement:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
