@@ -1,4 +1,4 @@
-# Create T3 App
+# Vault On Mars
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
@@ -28,3 +28,67 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
 
+## Homepage
+
+- Add a scroll bar for the news
+- Link the About page into Sections| Our story, Team and Mission
+- Add Research page
+- Create discord invite link, youtube and twitter page
+- Add Terms of Service page
+- Add Privacy Policy page
+- Add Cookie Policy page
+- News Link -- Read More doesn't work
+- Change down arrow indicator to button going to very bottom
+- Add email updates , subscribe
+
+## Analytics
+
+- Workshop name
+- Future Changes
+- Community Analytics
+- Personal Analytics
+  
+## Achievements
+
+- Future Changes
+
+## [Game] Features
+
+- Add back functionality to home button
+- Remove one of the layouts (top)
+- Remove Learn More
+  
+## Dev Updates
+
+- Remove page, combine with News
+- Add Categories (All News)
+- Add separate field for Content in form when we click on the link
+- change time to show date month and year
+
+## News
+
+- Update Category Filters  (All News, etc)
+- Change Featured News to Latest Updates
+- Back to Home button
+- Fix Carousel (1, 2, 3, ...)
+- Post Button for developer only
+
+## Subscribe
+
+- Add unsubscription and end of email, upon completing a form they can unsubscribe till they resubscribe.
+
+## About
+
+- Make 3 different sections, out story, team and mission
+
+## Download
+
+- add back to home button
+- Download free button doesn't work
+- Purchase and download button doesn't work
+- Recheck system requirements
+- Instillation guide is wrong
+- Change troubleshooting method to reflect to no support center and no technical support team
+- FAQs is wrong
+- Download Now doesn't work
+- Remove Explore Features

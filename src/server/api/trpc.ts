@@ -6,9 +6,10 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { auth } from "@clerk/nextjs/server";
 
 import { db } from "~/server/db";
 
@@ -27,7 +28,7 @@ import { db } from "~/server/db";
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
     db,
-    ...opts,
+    headers: opts.headers,
   };
 };
 
@@ -35,7 +36,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * 2. INITIALIZATION
  *
  * This is where the tRPC API is initialized, connecting the context and transformer. We also parse
- * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
+ * ZodErrors so that you get type safety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
 const t = initTRPC.context<typeof createTRPCContext>().create({
@@ -104,3 +105,59 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+export const devProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(async ({ next, ctx }) => {
+    // Get the current user from Clerk (await the promise)
+    const { userId, sessionClaims } = await auth();
+
+    if (!userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You must be logged in to perform this action",
+      });
+    }
+
+    const isUserDev =
+      sessionClaims?.publicMetadata &&
+      (sessionClaims.publicMetadata as Record<string, unknown>).typeUser ===
+        "Dev";
+
+    if (!isUserDev) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Only developers can perform this action",
+      });
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        userId,
+        user: { id: userId, isDeveloper: true },
+      },
+    });
+  });
+/**
+ * Protected (authenticated) procedure
+ *
+ * Ensures that the user is authenticated.
+ */
+export const protectedProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(async ({ next, ctx }) => {
+    const { userId } = await auth();
+    if (!userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You must be logged in to perform this action",
+      });
+    }
+    return next({
+      ctx: {
+        ...ctx,
+        userId,
+      },
+    });
+  });
